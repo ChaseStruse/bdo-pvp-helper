@@ -1,3 +1,4 @@
 debug_*.png
 __pycache__/
 .venv/
+*.db
