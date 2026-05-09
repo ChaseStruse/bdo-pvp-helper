@@ -1,0 +1,56 @@
+{
+    "Exhale": {
+        "Kills": 0,
+        "Deaths": 3,
+        "CC": 6,
+        "Dealt": 116282,
+        "Taken": 118925,
+        "Healed": 75921,
+        "Enemy": false
+    },
+    "Snoodle": {
+        "Kills": 4,
+        "Deaths": 2,
+        "CC": 11,
+        "Dealt": 129862,
+        "Taken": 139212,
+        "Healed": 91577,
+        "Enemy": false
+    },
+    "KingChris": {
+        "Kills": 3,
+        "Deaths": 3,
+        "CC": 19,
+        "Dealt": 174438,
+        "Taken": 160863,
+        "Healed": 120321,
+        "Enemy": false
+    },
+    "Valla": {
+        "Kills": 1,
+        "Deaths": 3,
+        "CC": 6,
+        "Dealt": 71866,
+        "Taken": 128944,
+        "Healed": 67071,
+        "Enemy": true
+    },
+    "AceOfThrees": {
+        "Kills": 4,
+        "Deaths": 2,
+        "CC": 18,
+        "Dealt": 162332,
+        "Taken": 119416,
+        "Healed": 93574,
+        "Enemy": true
+    },
+    "AmericanSniper": {
+        "Kills": 3,
+        "Deaths": 2,
+        "CC": 26,
+        "Dealt": 184802,
+        "Taken": 172222,
+        "Healed": 144318,
+        "Enemy": true
+    }
+}
