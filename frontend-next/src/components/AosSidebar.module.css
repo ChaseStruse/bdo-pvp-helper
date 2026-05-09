@@ -1,0 +1,64 @@
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  padding: 8px 0;
+}
+
+.sectionTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  padding: 0 16px 12px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 8px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+}
+
+.link:hover {
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.active {
+  color: var(--primary-color);
+  background: rgba(47, 129, 247, 0.1);
+  font-weight: 600;
+}
+
+.active:hover {
+  background: rgba(47, 129, 247, 0.15);
+}
+
+.icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.activeDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  margin-left: auto;
+}

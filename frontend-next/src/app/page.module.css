@@ -1,0 +1,26 @@
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.welcome {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
