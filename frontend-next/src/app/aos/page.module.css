@@ -1,0 +1,59 @@
+.userPill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+.dot {
+  background: var(--secondary-color);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Win/Loss toggle ── */
+.winLoss {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.winLossLabel {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-right: 4px;
+}
+
+.resultBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: var(--transition);
+}
+
+.resultBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.winActive {
+  background: rgba(63, 185, 80, 0.12);
+  border-color: rgba(63, 185, 80, 0.5);
+  color: #3fb950;
+}
+
+.lossActive {
+  background: rgba(248, 81, 73, 0.12);
+  border-color: rgba(248, 81, 73, 0.5);
+  color: #f85149;
+}

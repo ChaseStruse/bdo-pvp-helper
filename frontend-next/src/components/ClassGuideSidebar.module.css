@@ -1,0 +1,114 @@
+.sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  padding: 8px 0;
+}
+
+.sectionTitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  padding: 0 12px 12px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 8px;
+}
+
+/* Tree buttons (class / spec / section rows) */
+.treeBtn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.9rem;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  text-align: left;
+}
+
+.treeBtn:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.classBtn {
+  padding: 9px 12px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.specBtn {
+  padding: 7px 12px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.sectionBtn {
+  padding: 6px 12px;
+  color: var(--text-dim);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+.chevron {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  transition: transform 0.15s ease;
+  display: inline-block;
+}
+
+.open {
+  transform: rotate(90deg);
+}
+
+.treeIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* Indentation levels */
+.indent1 { padding-left: 12px; }
+.indent2 { padding-left: 12px; }
+.indent3 { padding-left: 10px; }
+
+/* Topic links (leaf nodes) */
+.topicLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: var(--transition);
+  position: relative;
+}
+
+.topicLink:hover {
+  color: var(--text-color);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.active {
+  color: var(--primary-color);
+  background: rgba(47, 129, 247, 0.1);
+  font-weight: 600;
+}
+
+.active:hover {
+  background: rgba(47, 129, 247, 0.15);
+}
+
+.activeDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  flex-shrink: 0;
+}

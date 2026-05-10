@@ -2,9 +2,9 @@ import cv2
 import os
 import numpy as np
 
-CLASS_ICONS_DIR = "infrastructure/aos-data-extract/class-icons"
-SPEC_ICONS_DIR = "infrastructure/aos-data-extract/class-spec-icons"
-IMAGE_PATH = "example-images/image.png"
+CLASS_ICONS_DIR = "backend/aos/class_icons"
+SPEC_ICONS_DIR = "backend/aos/class_spec_icons"
+IMAGE_PATH = "example_images/image.png"
 
 def debug_matching():
     # This matches the extractor logic
