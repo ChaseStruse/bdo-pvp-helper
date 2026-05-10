@@ -1,11 +1,18 @@
 'use client';
 
 import { useRef, useState, useMemo } from 'react';
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { CLASSES, SPECS, ASCENSION_ONLY_CLASSES, API_BASE, DEBUG_USER } from '@/lib/constants';
 import { PlayerRow, SortKey } from '@/lib/types';
 import styles from './page.module.css';
 
 export default function AoSPage() {
+  const { data: session, status } = useSession();
+  // Use family_name (session.user.name) as user_id so it matches in-game name
+  const userId = session?.user?.name ?? DEBUG_USER;
+  const displayName = session?.user?.name ?? DEBUG_USER;
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -14,6 +21,10 @@ export default function AoSPage() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [sortKey, setSortKey] = useState<SortKey>('Dealt');
   const [sortOrder, setSortOrder] = useState<1 | -1>(-1);
+  const [didWin, setDidWin] = useState<boolean | null>(null);
+  const [imagePath, setImagePath] = useState<string | null>(null);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'pending' | 'error'>('idle');
+  const [showPendingSuccess, setShowPendingSuccess] = useState(false);
 
   // ── File Handling ──────────────────────────────────────────────────────────
 
@@ -47,15 +58,18 @@ export default function AoSPage() {
     try {
       const res = await fetch(`${API_BASE}/extract`, { method: 'POST', body: formData });
       if (!res.ok) throw new Error('Extraction failed');
-      const data = await res.json();
+      const resData = await res.json();
+      
+      const data = resData.results || resData; // Support both old and new backend formats
+      if (resData.image_path) setImagePath(resData.image_path);
 
       // Map raw backend response { playerName: { Kills, Deaths, ... } }
       // to a flat array of PlayerRow
       const rows: PlayerRow[] = Object.entries(data).map(([name, stats]) => {
         const s = stats as PlayerRow;
         return {
-          name,
           ...s,
+          name,
           selectedClass: s.Class ?? '',
           selectedSpec: s.Spec ?? '',
         };
@@ -126,19 +140,35 @@ export default function AoSPage() {
 
   const saveAndUpload = async () => {
     setIsExtracting(true);
+    setSaveStatus('saving');
     try {
       const res = await fetch(`${API_BASE}/save`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: DEBUG_USER, data: sortedResults }),
+        body: JSON.stringify({ user_id: userId, data: sortedResults, won: didWin, image_path: imagePath }),
       });
       const result = await res.json();
       if (result.status === 'success') {
-        alert(`Successfully saved! Scoreboard ID: ${result.scoreboard_id}`);
+        if (result.is_approved) {
+          setSaveStatus('saved');
+          setTimeout(() => setSaveStatus('idle'), 5000);
+        } else {
+          // Clear the form and show the pending success screen
+          setShowPendingSuccess(true);
+          setExtractionResults(null);
+          setSelectedFile(null);
+          setPreviewUrl(null);
+          setImagePath(null);
+          setDidWin(null);
+          setSaveStatus('idle');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       } else {
         throw new Error(result.error);
       }
     } catch (err: unknown) {
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 5000);
       const msg = err instanceof Error ? err.message : 'Unknown error';
       alert('Failed to save: ' + msg);
     } finally {
@@ -155,32 +185,59 @@ export default function AoSPage() {
 
   return (
     <div>
-      {/* Debug user pill */}
+      {/* Debug / auth user pill */}
       <div className={styles.userPill}>
         <span className={styles.dot} />
-        <span>Logged in as: <strong>{DEBUG_USER}</strong> (Debug Mode)</span>
+        {status === 'authenticated'
+          ? <span>Logged in as: <strong>{displayName}</strong></span>
+          : <span style={{ color: '#f0a000' }}>Not signed in — uploads saved as <strong>{DEBUG_USER}</strong> (dev mode)</span>
+        }
       </div>
+
+      {/* Login prompt if not authenticated */}
+      {status === 'unauthenticated' && (
+        <div style={{ background: 'rgba(47,129,247,0.06)', border: '1px solid rgba(47,129,247,0.2)', borderRadius: '8px', padding: '14px 20px', marginBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+          <span style={{ fontSize: '0.9rem', color: 'var(--text-dim)' }}>Sign in to save matches to your profile and track your W/L record.</span>
+          <Link href="/auth/signin" className="btn" style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>Sign In</Link>
+        </div>
+      )}
+
+      {/* Pending Success Screen */}
+      {showPendingSuccess && (
+        <div className="card" style={{ textAlign: 'center', padding: '60px 20px', marginBottom: '20px', borderColor: 'rgba(210, 153, 34, 0.4)', background: 'rgba(210, 153, 34, 0.05)' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '16px' }}>⏳</div>
+          <h2 style={{ color: '#d29922', margin: '0 0 16px 0' }}>Submission successfully submitted</h2>
+          <p style={{ color: 'var(--text-dim)', marginBottom: '30px', fontSize: '1.1rem' }}>
+            Awaiting admin approval. Once approved, it will appear on your profile.
+          </p>
+          <button className="btn btn-primary" onClick={() => setShowPendingSuccess(false)}>
+            Upload Another Match
+          </button>
+        </div>
+      )}
 
       {/* Upload zone */}
-      <div
-        className="upload-zone"
-        onClick={() => fileInputRef.current?.click()}
-        onDragOver={(e) => e.preventDefault()}
-        onDrop={onDrop}
-      >
-        <div className="upload-icon">✦</div>
-        <p>{selectedFile ? selectedFile.name : 'Click or drag AoS Scoreboard screenshot here'}</p>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          style={{ display: 'none' }}
-          onChange={onInputChange}
-        />
-      </div>
+      {!showPendingSuccess && (
+        <div
+          className="upload-zone"
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={onDrop}
+        >
+          <div className="upload-icon">✦</div>
+          <p>{selectedFile ? selectedFile.name : 'Click or drag AoS Scoreboard screenshot here'}</p>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={onInputChange}
+          />
+        </div>
+      )}
 
       {/* Preview */}
-      {previewUrl && (
+      {!showPendingSuccess && previewUrl && (
         <div className="preview-container">
           <img src={previewUrl} className="preview-img" alt="Scoreboard Preview" />
           <div style={{ marginTop: '20px' }}>
@@ -243,15 +300,40 @@ export default function AoSPage() {
             </tbody>
           </table>
 
-          <div style={{ marginTop: '30px', textAlign: 'right' }}>
+          <div style={{ marginTop: '30px' }}>
+            {/* Win/Loss toggle */}
+            <div className={styles.winLoss}>
+              <span className={styles.winLossLabel}>Match Result:</span>
+              <button
+                className={`${styles.resultBtn} ${didWin === true ? styles.winActive : ''}`}
+                onClick={() => setDidWin((prev) => (prev === true ? null : true))}
+              >
+                ✓ Win
+              </button>
+              <button
+                className={`${styles.resultBtn} ${didWin === false ? styles.lossActive : ''}`}
+                onClick={() => setDidWin((prev) => (prev === false ? null : false))}
+              >
+                ✗ Loss
+              </button>
+              {didWin === null && (
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)' }}>Optional</span>
+              )}
+            </div>
+
             {isSaveDisabled && (
               <p style={{ color: '#f85149', fontSize: '0.85rem', marginBottom: '10px' }}>
                 * Please select Class and Spec for all players to save.
               </p>
             )}
-            <button className="btn" onClick={saveAndUpload} disabled={isSaveDisabled || isExtracting}>
-              Save and Upload
-            </button>
+            <div style={{ textAlign: 'right', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '16px' }}>
+              {saveStatus === 'saved' && <span style={{ color: '#3fb950', fontSize: '0.9rem', fontWeight: 'bold' }}>✓ Match saved & stats updated!</span>}
+              {saveStatus === 'error' && <span style={{ color: '#f85149', fontSize: '0.9rem' }}>Failed to save.</span>}
+              
+              <button className="btn" onClick={saveAndUpload} disabled={isSaveDisabled || isExtracting || saveStatus === 'saving'}>
+                {saveStatus === 'saving' ? 'Saving...' : 'Save and Upload'}
+              </button>
+            </div>
           </div>
         </div>
       )}

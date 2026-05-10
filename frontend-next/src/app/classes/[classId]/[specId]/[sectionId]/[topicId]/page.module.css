@@ -1,0 +1,28 @@
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pageHeader {
+  margin-bottom: 24px;
+}
+
+.title {
+  color: var(--primary-color);
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.hint strong {
+  color: var(--primary-color);
+}

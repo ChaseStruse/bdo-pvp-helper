@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import Providers from '@/components/Providers';
 
 export const metadata: Metadata = {
   title: 'BDO PvP Helper',
@@ -15,10 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
-          <Navbar />
-          <main>{children}</main>
-        </div>
+        <Providers>
+          <div style={{ width: '100%', maxWidth: '1200px', margin: '0 auto', padding: '40px 20px' }}>
+            <Navbar />
+            <main>{children}</main>
+          </div>
+        </Providers>
       </body>
     </html>
   );

@@ -1,0 +1,255 @@
+.center {
+  text-align: center;
+  padding: 60px;
+  font-size: 1rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: var(--transition);
+}
+
+.back:hover {
+  color: var(--primary-color);
+}
+
+/* ── Hero ── */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface-color);
+  border: 1px solid rgba(47, 129, 247, 0.25);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+}
+
+.heroAvatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(47, 129, 247, 0.15);
+  border: 2px solid rgba(47, 129, 247, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  flex-shrink: 0;
+}
+
+.heroInfo {
+  flex: 1;
+}
+
+.heroName {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0 0 4px;
+}
+
+.heroSub {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.heroRecord {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.recordItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.recordVal {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.recordLabel {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+
+.recordDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--border-color);
+}
+
+.win  { color: #3fb950; }
+.loss { color: #f85149; }
+
+/* ── Sections ── */
+.section {
+  margin-bottom: 28px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ── Stats grid ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.statCard {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: var(--transition);
+}
+
+.statCard:hover {
+  border-color: rgba(47, 129, 247, 0.3);
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+}
+
+.statTotal {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.statAvg {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1.2;
+}
+
+/* ── Match cards ── */
+.matchCard {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+
+.matchCard:hover {
+  border-color: rgba(47, 129, 247, 0.2);
+}
+
+.matchHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  cursor: pointer;
+  gap: 16px;
+}
+
+.matchLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.matchDate {
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.matchUploader {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+.matchQuickStats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.chevron {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.matchBody {
+  padding: 0 18px 16px;
+}
+
+.highlightRow {
+  background: rgba(47, 129, 247, 0.06) !important;
+  font-weight: 600;
+}
+
+/* ── Badges ── */
+.badgeWin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(63, 185, 80, 0.15);
+  border: 1px solid rgba(63, 185, 80, 0.4);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #3fb950;
+}
+
+.badgeLoss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(248, 81, 73, 0.15);
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f85149;
+}
+
+.badgeNeutral {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-color);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}

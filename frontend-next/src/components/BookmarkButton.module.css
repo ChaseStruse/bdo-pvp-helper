@@ -1,0 +1,59 @@
+.skeleton {
+  width: 76px;
+  height: 30px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bookmarked {
+  background: rgba(47, 129, 247, 0.1);
+  border-color: rgba(47, 129, 247, 0.4);
+  color: var(--primary-color);
+}
+
+.bookmarked:hover:not(:disabled) {
+  background: rgba(47, 129, 247, 0.2);
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.text {
+  line-height: 1;
+}

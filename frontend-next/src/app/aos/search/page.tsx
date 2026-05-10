@@ -1,35 +1,36 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { API_BASE } from '@/lib/constants';
-import { ScoreboardRecord } from '@/lib/types';
+import { PlayerProfile } from '@/lib/types';
+import styles from './page.module.css';
 
 export default function AosSearchPage() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<ScoreboardRecord[]>([]);
+  const [profile, setProfile] = useState<PlayerProfile | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const runSearch = async () => {
     if (!query.trim()) return;
     setLoading(true);
     setHasSearched(true);
+    setProfile(null);
     try {
-      const res = await fetch(`${API_BASE}/search?name=${encodeURIComponent(query)}`);
-      const data: ScoreboardRecord[] = await res.json();
-      setResults(data.map((r) => ({ ...r, expanded: false })));
+      const res = await fetch(`${API_BASE}/player/${encodeURIComponent(query.trim())}`);
+      if (res.status === 404) {
+        setProfile(null);
+      } else if (res.ok) {
+        const data: PlayerProfile = await res.json();
+        setProfile(data);
+      }
     } catch (err) {
       console.error(err);
-      alert('Search failed. Make sure the backend is running.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleExpand = (id: number) => {
-    setResults((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, expanded: !r.expanded } : r))
-    );
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,83 +38,82 @@ export default function AosSearchPage() {
   };
 
   return (
-    <div className="card">
-      <h2 style={{ color: 'var(--primary-color)', marginTop: 0 }}>Player Search</h2>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', marginBottom: '20px' }}>
-        Search across all uploaded AoS scoreboards by player name.
-      </p>
+    <div>
+      <h2 style={{ color: 'var(--primary-color)', marginBottom: '20px', marginTop: 0 }}>Player Search</h2>
 
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '28px' }}>
         <input
           type="text"
           className="data-select"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Enter player name (e.g. Valla)"
+          placeholder="Enter exact player name (e.g. Snoodle)"
         />
         <button className="btn" onClick={runSearch} disabled={loading} style={{ whiteSpace: 'nowrap' }}>
           {loading ? '…' : 'Search'}
         </button>
       </div>
 
-      {hasSearched && results.length === 0 && !loading && (
-        <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-dim)' }}>
-          No matches found for &quot;{query}&quot;.
-        </div>
+      {hasSearched && !loading && !profile && (
+        <div className={styles.empty}>No data found for &quot;{query}&quot;.</div>
       )}
 
-      {results.map((match) => (
-        <div key={match.id} className="history-item">
-          <div className="history-header" onClick={() => toggleExpand(match.id)}>
+      {profile && (
+        <div
+          className={styles.playerCard}
+          onClick={() => router.push(`/aos/player/${encodeURIComponent(profile.name)}`)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && router.push(`/aos/player/${encodeURIComponent(profile.name)}`)}
+        >
+          <div className={styles.cardLeft}>
+            <div className={styles.playerAvatar}>{profile.name[0].toUpperCase()}</div>
             <div>
-              <span className="history-id">#{match.id}</span>
-              <span style={{ color: 'var(--text-dim)', marginRight: '15px', fontSize: '0.9rem' }}>
-                Uploaded by: {match.user_id}
-              </span>
-              <span className="history-date">
-                {new Date(match.timestamp).toLocaleString()}
-              </span>
-            </div>
-            <div className="history-summary">
-              {match.expanded ? 'Click to collapse' : 'Click to view details'}
+              <div className={styles.playerName}>{profile.name}</div>
+              <div className={styles.playerMeta}>
+                {profile.main_class !== 'Unknown' ? `${profile.main_class} · ${profile.main_spec}` : 'Class Unknown'}
+              </div>
             </div>
           </div>
 
-          {match.expanded && (
-            <div className="history-details">
-              <table className="results-table" style={{ fontSize: '0.8rem' }}>
-                <thead>
-                  <tr>
-                    <th>Player</th>
-                    <th>Class</th>
-                    <th>Spec</th>
-                    <th>K/D</th>
-                    <th>Dealt</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {match.data.map((p) => (
-                    <tr
-                      key={p.name}
-                      className={[
-                        p.Enemy ? 'enemy-row' : '',
-                        p.name.toLowerCase() === query.toLowerCase() ? 'search-highlight' : '',
-                      ].filter(Boolean).join(' ')}
-                    >
-                      <td className="player-name">{p.name}</td>
-                      <td>{p.selectedClass || p.Class}</td>
-                      <td>{p.selectedSpec || p.Spec}</td>
-                      <td className="stat-value">{p.Kills} / {p.Deaths}</td>
-                      <td className="stat-value">{p.Dealt.toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className={styles.cardStats}>
+            <div className={styles.stat}>
+              <span className={styles.statVal}>{profile.matches_played}</span>
+              <span className={styles.statLabel}>Matches</span>
             </div>
-          )}
+            {profile.win_rate !== null ? (
+              <>
+                <div className={styles.statDivider} />
+                <div className={styles.stat}>
+                  <span className={`${styles.statVal} ${styles.win}`}>{profile.wins}W</span>
+                  <span className={styles.statLabel}>Wins</span>
+                </div>
+                <div className={styles.statDivider} />
+                <div className={styles.stat}>
+                  <span className={`${styles.statVal} ${styles.loss}`}>{profile.losses}L</span>
+                  <span className={styles.statLabel}>Losses</span>
+                </div>
+                <div className={styles.statDivider} />
+                <div className={styles.stat}>
+                  <span className={styles.statVal}>{profile.win_rate}%</span>
+                  <span className={styles.statLabel}>Win Rate</span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className={styles.statDivider} />
+                <div className={styles.stat}>
+                  <span className={styles.statVal} style={{ color: 'var(--text-dim)', fontSize: '0.85rem' }}>N/A</span>
+                  <span className={styles.statLabel}>W/L (no data)</span>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className={styles.cardArrow}>View Profile →</div>
         </div>
-      ))}
+      )}
     </div>
   );
 }
