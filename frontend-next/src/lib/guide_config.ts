@@ -45,6 +45,24 @@ export const GUIDE_TREE: Record<string, GuideClass> = {
               },
             },
           },
+          pve: {
+            label: 'PvE',
+            topics: {
+              combos: {
+                label: 'Combos',
+                file: 'ninja/awakening/ninja_awakening_combos_pve.md',
+              },
+            },
+          },
+          general: {
+            label: 'General',
+            topics: {
+              addons: {
+                label: 'Skill Add-ons',
+                file: 'ninja/awakening/ninja_awakening_skill_add_ons.md',
+              },
+            },
+          },
         },
       },
       succession: {
@@ -56,6 +74,24 @@ export const GUIDE_TREE: Record<string, GuideClass> = {
               combos: {
                 label: 'Combos',
                 file: 'ninja/succession/ninja_succession_combos_pvp.md',
+              },
+            },
+          },
+          pve: {
+            label: 'PvE',
+            topics: {
+              combos: {
+                label: 'Combos',
+                file: 'ninja/succession/ninja_succession_combos_pve.md',
+              },
+            },
+          },
+          general: {
+            label: 'General',
+            topics: {
+              addons: {
+                label: 'Skill Add-ons',
+                file: 'ninja/succession/ninja_succession_skill_add_ons.md',
               },
             },
           },
@@ -79,6 +115,24 @@ export const GUIDE_TREE: Record<string, GuideClass> = {
               },
             },
           },
+          pve: {
+            label: 'PvE',
+            topics: {
+              combos: {
+                label: 'Combos',
+                file: 'maegu/awakening/maegu_awakening_combos_pve.md',
+              },
+            },
+          },
+          general: {
+            label: 'General',
+            topics: {
+              addons: {
+                label: 'Skill Add-ons',
+                file: 'maegu/awakening/maegu_awakening_skill_add_ons.md',
+              },
+            },
+          },
         },
       },
       succession: {
@@ -90,6 +144,24 @@ export const GUIDE_TREE: Record<string, GuideClass> = {
               combos: {
                 label: 'Combos',
                 file: 'maegu/succession/maegu_succession_combos_pvp.md',
+              },
+            },
+          },
+          pve: {
+            label: 'PvE',
+            topics: {
+              combos: {
+                label: 'Combos',
+                file: 'maegu/succession/maegu_succession_combos_pve.md',
+              },
+            },
+          },
+          general: {
+            label: 'General',
+            topics: {
+              addons: {
+                label: 'Skill Add-ons',
+                file: 'maegu/succession/maegu_succession_skill_add_ons.md',
               },
             },
           },
